@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Web;
 using System.Web.Routing;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Microsoft.AspNet.FriendlyUrls.Resolvers;
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace okta_aspnet_webforms_example
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
     public partial class ViewSwitcher : System.Web.UI.UserControl
     {
@@ -35,6 +33,7 @@ namespace okta_aspnet_webforms_example
                 this.Visible = false;
                 return;
             }
+
             var url = GetRouteUrl(switchViewRouteName, new { view = AlternateView, __FriendlyUrls_SwitchViews = true });
             url += "?ReturnUrl=" + HttpUtility.UrlEncode(Request.RawUrl);
             SwitchUrl = url;
