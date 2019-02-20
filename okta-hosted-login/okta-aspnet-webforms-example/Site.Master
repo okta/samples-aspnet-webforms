@@ -61,7 +61,7 @@
                                     <a
                                         href="Site.Master"
                                         runat="server"
-                                        onserverclick="btnLogin_Click">Login</a>
+                                        onserverclick="BtnLogin_Click">Login</a>
                                 </li>
                             </ul>
                         </AnonymousTemplate>
@@ -75,7 +75,7 @@
                                                      LogoutAction="Redirect"
                                                      LogoutText="Logout"
                                                      LogoutPageUrl="~/"
-                                                     OnLoggingOut="loggingStatus_LoggingOut" />
+                                                     OnLoggingOut="LoggingStatus_LoggingOut" />
                                 </li>
                             </ul>
                         </LoggedInTemplate>
