@@ -1,2 +1,12 @@
-script: exit 0
+language: node_js
 
+node_js:
+- '8.4.0'
+
+os:
+ - windows
+
+install: true
+
+script:
+- choco install iisexpress
