@@ -14,7 +14,7 @@ Before running this sample, you will need the following:
 ## Running This Example
 
 Clone this repo and replace the okta configuration placeholders in the `Web.Config` with your configuration values from the Okta Developer Console. 
-You can see all the available configuration options in the [okta-aspnet GitHub](https://github.com/okta/okta-aspnet/blob/master/README.md).
+You can see all the available configuration options in the [okta-aspnet GitHub](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-mvc.md#configuration-reference).
 For step-by-step instructions, visit the Okta [ASP.NET MVC quickstart]. The quickstart will guide you through adding Okta login to your ASP.NET application.
 
 **Note:** Although the quickstart shows how to use the Okta middleware in an ASP.NET MVC application, most of the steps are the same for your ASP.NET Web Forms application.
