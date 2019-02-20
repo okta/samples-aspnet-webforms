@@ -3,7 +3,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace okta_aspnet_webforms_example
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
     public partial class Profile : System.Web.UI.Page
     {
@@ -11,8 +13,7 @@ namespace okta_aspnet_webforms_example
         {
             if (Request.IsAuthenticated)
             {
-
-                GridViewClaims.DataSource = HttpContext.Current.GetOwinContext().Authentication.User.Claims.Select(x => new {Name = x.Type, Value = x.Value});
+                GridViewClaims.DataSource = HttpContext.Current.GetOwinContext().Authentication.User.Claims.Select(x => new { Name = x.Type, Value = x.Value });
                 GridViewClaims.DataBind();
             }
             else
@@ -20,7 +21,7 @@ namespace okta_aspnet_webforms_example
                 var mainContent = (ContentPlaceHolder)Page.Form.FindControl("MainContent");
                 mainContent.Controls.Add(new Label
                 {
-                    Text = "You are not authenticated!"
+                    Text = "You are not authenticated!",
                 });
             }
         }

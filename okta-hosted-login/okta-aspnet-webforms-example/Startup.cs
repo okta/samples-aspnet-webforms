@@ -1,14 +1,16 @@
-﻿using Microsoft.Owin;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Owin;
-using System.Collections.Generic;
-using System.Configuration;
 using Okta.AspNet;
+using Owin;
 
 [assembly: OwinStartup(typeof(okta_aspnet_webforms_example.Startup))]
 
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 namespace okta_aspnet_webforms_example
+#pragma warning restore SA1300 // Element should begin with upper-case letter
 {
     public class Startup
     {
