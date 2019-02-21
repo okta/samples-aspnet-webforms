@@ -12,7 +12,7 @@ namespace okta_aspnet_webforms_example
             var settings = new FriendlyUrlSettings();
             settings.AutoRedirectMode = RedirectMode.Permanent;
             routes.EnableFriendlyUrls(settings);
-            routes.MapPageRoute("Default", "Home", "~/Default.aspx");
+            routes.MapPageRoute("Home", string.Empty, "~/Default.aspx");
         }
     }
 }
