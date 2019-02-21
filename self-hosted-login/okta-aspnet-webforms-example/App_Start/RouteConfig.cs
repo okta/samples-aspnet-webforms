@@ -1,4 +1,5 @@
-﻿using System.Web.Routing;
+﻿using System;
+using System.Web.Routing;
 using Microsoft.AspNet.FriendlyUrls;
 
 #pragma warning disable SA1300 // Element should begin with upper-case letter
@@ -9,10 +10,8 @@ namespace okta_aspnet_webforms_example
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            var settings = new FriendlyUrlSettings();
-            settings.AutoRedirectMode = RedirectMode.Permanent;
-            routes.EnableFriendlyUrls(settings);
-            routes.MapPageRoute("Default", "Home", "~/Default.aspx");
+            routes.EnableFriendlyUrls(new FriendlyUrlSettings());
+            routes.MapPageRoute("Home", string.Empty, "~/Default.aspx");
         }
     }
 }

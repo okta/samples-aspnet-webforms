@@ -23,5 +23,5 @@
         form.submit();
     }, (err) => {
         console.error(err);
-    });
+        });
 </script>
