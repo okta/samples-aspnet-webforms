@@ -58,17 +58,19 @@
                         <AnonymousTemplate>
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <a href="Login.aspx" runat="server">Login</a>
+                                    <a ClientIDMode="Static" id="loginButton" href="Login.aspx" runat="server">Login</a>
                                 </li>
                             </ul>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                <li><a runat="server" href="~/Profile">Profile</a></li>
+                                <li><a ClientIDMode="Static" id="profileButton" runat="server" href="~/Profile">Profile</a></li>
                             </li>
                             <li>
                                 <asp:LoginStatus runat="server"
+                                                 ClientIDMode="Static"
+                                                 ID="logoutButton"
                                                  LogoutAction="Redirect"
                                                  LogoutText="Logout"
                                                  LogoutPageUrl="~/Logout.aspx"/>

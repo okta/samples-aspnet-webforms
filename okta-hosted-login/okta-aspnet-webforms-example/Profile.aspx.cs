@@ -25,5 +25,13 @@ namespace okta_aspnet_webforms_example
                 });
             }
         }
+
+        protected void GridViewClaims_OnRowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            foreach (GridViewRow row in GridViewClaims.Rows)
+            {
+                row.Cells[1].Attributes.Add("id", $"claim-{row.Cells[0].Text}");
+            }
+        }
     }
 }

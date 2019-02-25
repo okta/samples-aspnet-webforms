@@ -59,6 +59,8 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
                                     <a
+                                        ClientIDMode="Static"
+                                        id="loginButton"
                                         href="Site.Master"
                                         runat="server"
                                         onserverclick="BtnLogin_Click">Login</a>
@@ -68,10 +70,12 @@
                         <LoggedInTemplate>
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <li><a runat="server" href="~/Profile">Profile</a></li>
+                                    <li><a ClientIDMode="Static" id="profileButton" runat="server" href="~/Profile">Profile</a></li>
                                 </li>
                                 <li>
                                     <asp:LoginStatus runat="server"
+                                                     ClientIDMode="Static"
+                                                     ID="logoutButton"
                                                      LogoutAction="Redirect"
                                                      LogoutText="Logout"
                                                      LogoutPageUrl="~/"
