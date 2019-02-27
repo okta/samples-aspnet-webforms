@@ -46,4 +46,5 @@ function cloneRepository(repository, directory) {
 
 // Update the Web.config in the dist directory with your org & webapp details
 updateConfig(path.join(__dirname, '../..', 'okta-hosted-login', '/dist/okta-aspnet-webforms-example/Web.config'));
+updateConfig(path.join(__dirname, '../..', 'self-hosted-login', '/dist/okta-aspnet-webforms-example/Web.config'));
 cloneRepository('https://github.com/okta/okta-oidc-tck.git', 'okta-oidc-tck');
