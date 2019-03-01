@@ -14,20 +14,24 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 const path = require('path');
+const url = require('url');
 
 // Users can also provide the testenv configuration at the root folder
 require('dotenv').config({ path: path.join(__dirname, '..', 'testenv') });
 
 function updateConfig(file) {
-  if (!process.env.OKTA_DOMAIN || !process.env.CLIENT_ID || !process.env.CLIENT_SECRET || !process.env.USER_NAME || !process.env.PASSWORD) {
-    console.log('[ERROR] Please set the necessary Environment variables (OKTA_DOMAIN, CLIENT_ID, CLIENT_SECRET, USER_NAME, PASSWORD)');
+  if (!process.env.ISSUER || !process.env.CLIENT_ID || !process.env.CLIENT_SECRET || !process.env.USER_NAME || !process.env.PASSWORD) {
+    console.log('[ERROR] Please set the necessary Environment variables (ISSUER, CLIENT_ID, CLIENT_SECRET, USER_NAME, PASSWORD)');
     process.exit(1);
   }
+
+  const urlProperties = url.parse(process.env.ISSUER);
+  const OKTA_DOMAIN = urlProperties.host;
 
   const data = fs.readFileSync(file, 'utf8');
   let result = data.replace(/{ClientId}/g, process.env.CLIENT_ID);
   result = result.replace(/{ClientSecret}/g, process.env.CLIENT_SECRET);
-  result = result.replace(/{yourOktaDomain}/g, process.env.OKTA_DOMAIN);
+  result = result.replace(/{yourOktaDomain}/g, OKTA_DOMAIN);
   fs.writeFileSync(file, result, 'utf8');
 }
 

@@ -63,20 +63,19 @@ npm install
 Once you have those resources setup, export their details as the following environment variables:
 
 ```bash
-setx OKTA_DOMAIN {yourOktaDomain}
+setx ISSUER https://{yourOktaDomain}/oauth2/default
 setx CLIENT_ID {yourWebAppClientId}
 setx CLIENT_SECRET {yourWebAppClientSecret}
 setx USER_NAME {userName}
 setx PASSWORD {password}
 ```
-> **NOTE:** Ensure that you DO NOT include `https://` in your `OKTA_DOMAIN` environment variable.
 
 As an alternative you can provide the environment variables in a file named `testenv` in the root folder.
 
 For example:
 
 ```
-OKTA_DOMAIN=dev-12345.oktapreview.com
+ISSUER=https://dev-12345.oktapreview.com/oauth2/default
 CLIENT_ID=webclient123
 CLIENT_SECRET=websecret123
 USERNAME=myuser@example.com
