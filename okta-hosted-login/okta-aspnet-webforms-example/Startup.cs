@@ -29,6 +29,7 @@ namespace okta_aspnet_webforms_example
                 PostLogoutRedirectUri = ConfigurationManager.AppSettings["okta:PostLogoutRedirectUri"],
                 GetClaimsFromUserInfoEndpoint = true,
                 Scope = new List<string> { "openid", "profile", "email" },
+                // AuthorizationServerId = null, // un-comment this line if you're not using a custom authorization server
             });
         }
     }
