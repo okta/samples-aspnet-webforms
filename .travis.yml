@@ -8,12 +8,17 @@ node_js:
 install:
   - PowerShell -Command 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned'
   - choco install iisexpress
+  - choco install jdk11
+  - choco install googlechrome
+  - export PATH=$PATH:"/c/Program Files/Java/jdk1.8.0_201/bin"
+  - export PATH=$PATH:"C:\Program Files\Java\jdk1.8.0_201\bin"
+  - PowerShell -Command 'refreshenv'
+  - java -version
   
 script:
-  - dir C:\\Users\\travis\\build\\okta\\samples-aspnet-webforms\\okta-hosted-login
   - cd e2e-tests
   - npm install
   - npm run pretest
-  - dir C:\\Users\\travis\\build\\okta\\samples-aspnet-webforms\\okta-hosted-login\\dist
-  - C:\\Program\ Files\\IIS\ Express\\iisexpress.exe /path:C:\\Users\\travis\\build\\okta\\samples-aspnet-webforms\\okta-hosted-login\\dist\\okta-aspnet-webforms-example
-  - C:\\Program\ Files\\IIS\ Express\\iisexpress.exe /path:C:\Users\travis\build\okta\samples-aspnet-webforms\okta-hosted-login\dist\okta-aspnet-webforms-example
+  - start 'C:\\Program\ Files\\IIS\ Express\\iisexpress.exe /path:C:\\Users\\travis\\build\\okta\\samples-aspnet-webforms\\okta-hosted-login\\dist\\okta-aspnet-webforms-example'
+  - npm run test:okta-hosted-login
+  - PowerShell -Command 'TASKKILL /F /IM iisexpress.exe'
