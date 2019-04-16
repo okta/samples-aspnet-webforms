@@ -283,3 +283,5 @@ $RECYCLE.BIN/
 /self-hosted-login/tools
 /okta-hosted-login/dist
 /okta-hosted-login/tools
+/e2e-tests/okta-oidc-tck/
+/e2e-tests/package-lock.json
