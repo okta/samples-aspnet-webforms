@@ -12,7 +12,7 @@
       "test:custom-login": "protractor okta-oidc-tck/e2e-tests/custom-login/conf.js",
       "test:e2e": "npm run test:okta-hosted-login && npm run test:custom-login",
       "build": "npm run build-okta-hosted-login-server && npm run build-self-hosted-login-server",
-      "pretest": "npm run build && webdriver-manager update --gecko false && node scripts/update-webconfig.js"
+      "pretest": "npm run build && webdriver-manager update --versions.standalone=3.141.59 --gecko false && node scripts/update-webconfig.js"
     },
     "license": "Apache-2.0",
     "repository": {

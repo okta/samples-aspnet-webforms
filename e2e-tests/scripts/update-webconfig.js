@@ -46,6 +46,7 @@ function cloneRepository(repository, directory) {
   const command = `git clone ${repository}`;
   console.log(`Cloning repository ${directory}`);
   execSync(command);
+  execSync(`cd ${directory} && git checkout vm-debug`);
 }
 
 // Update the Web.config in the dist directory with your org & webapp details
