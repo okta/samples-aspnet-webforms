@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
+using System.Web;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
@@ -18,7 +19,10 @@ namespace okta_aspnet_webforms_example
         {
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions());
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                LoginPath = new PathString("/Login.aspx"),
+            });
 
             app.UseOktaMvc(new OktaMvcOptions()
             {
@@ -27,8 +31,8 @@ namespace okta_aspnet_webforms_example
                 ClientSecret = ConfigurationManager.AppSettings["okta:ClientSecret"],
                 RedirectUri = ConfigurationManager.AppSettings["okta:RedirectUri"],
                 PostLogoutRedirectUri = ConfigurationManager.AppSettings["okta:PostLogoutRedirectUri"],
-                GetClaimsFromUserInfoEndpoint = true,
                 Scope = new List<string> { "openid", "profile", "email" },
+                LoginMode = LoginMode.SelfHosted,
             });
         }
     }
