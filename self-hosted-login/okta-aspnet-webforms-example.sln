@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.271
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "okta-aspnet-webforms-example", "okta-aspnet-webforms-example\okta-aspnet-webforms-example.csproj", "{26418E7D-A257-490E-997C-837B666AC593}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "okta-aspnet-webforms-example", "okta-aspnet-webforms-example\okta-aspnet-webforms-example.csproj", "{580434B1-F167-4705-BA79-C6A9806C261F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{26418E7D-A257-490E-997C-837B666AC593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26418E7D-A257-490E-997C-837B666AC593}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26418E7D-A257-490E-997C-837B666AC593}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26418E7D-A257-490E-997C-837B666AC593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{580434B1-F167-4705-BA79-C6A9806C261F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{580434B1-F167-4705-BA79-C6A9806C261F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{580434B1-F167-4705-BA79-C6A9806C261F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{580434B1-F167-4705-BA79-C6A9806C261F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {CD5491A1-FB99-49F7-9690-F4BA14F09593}
+		SolutionGuid = {0663DEDD-1501-42BD-84E9-5966E56CCC20}
 	EndGlobalSection
 EndGlobal
