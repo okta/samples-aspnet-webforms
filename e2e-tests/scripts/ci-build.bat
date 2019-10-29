@@ -1,8 +1,8 @@
 rmdir /Q /S %SAMPLES_ASPNET_WEBFORMS_HOME%\MYGIT
 cd %SAMPLES_ASPNET_WEBFORMS_HOME%
-git clone git@github.com:okta/samples-aspnet-webforms.git MYGIT
+git clone https://github.com/okta/samples-aspnet-webforms.git MYGIT
 cd %SAMPLES_ASPNET_WEBFORMS_HOME%\MYGIT
-git checkout %SHA%
+git checkout %sha%
 git rev-parse --short HEAD > MY_SHORT_SHA
 
 cd %SAMPLES_ASPNET_WEBFORMS_HOME%\MYGIT\e2e-tests
