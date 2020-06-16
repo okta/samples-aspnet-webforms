@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="okta_aspnet_webforms_example.Login" %>
 <script src="https://global.oktacdn.com/okta-signin-widget/3.2.1/js/okta-sign-in.min.js" type="text/javascript"></script>
 <link href="https://global.oktacdn.com/okta-signin-widget/3.2.1/css/okta-sign-in.min.css" type="text/css" rel="stylesheet" />
-<script src="Scripts/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script src="Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
 
 <div id="widget"></div>
 
