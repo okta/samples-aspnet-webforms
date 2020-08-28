@@ -11,8 +11,9 @@ Before running this sample, you will need the following:
 * An Okta Application, configured for Web mode. This is done from the Okta Developer Console and you can find instructions [here][OIDC Web Application Setup Instructions].  When following the wizard, use the default properties.  They are designed to work with our sample applications.
 * The desired identity providers configured in Okta. This is done from the Okta Developer Console and you can find instructions [here](https://developer.okta.com/docs/guides/add-an-external-idp/).
 
-> **Note:** Make sure to add `http://localhost:8080` as a [Trusted Origin].
+> **Notes:** Make sure to add `https://localhost:44314` as a [Trusted Origin].
 
+> Because of recent changes in [Set-Cookie behavior (SameSite)](https://web.dev/samesite-cookies-explained) this code will only work properly if it's configured to use https. Check out [Work with SameSite cookies in ASP.NET](https://docs.microsoft.com/en-us/aspnet/samesite/system-web-samesite) for more details.
 
 ## Running This Example
 
@@ -22,7 +23,7 @@ For step-by-step instructions, visit the Okta [ASP.NET MVC Guide]. The guide wil
 
 > **Note:** Although the quickstart shows how to use the Okta middleware with an ASP.NET MVC application, most of the steps are the same for your ASP.NET Web Forms application.
 
-Now start your server and navigate to http://localhost:8080 in your browser.
+Now start your server and navigate to https://localhost:44314 in your browser.
 
 If you see a home page that allows you to login, then things are working!  Clicking the **Log in** link will redirect you to the self-hosted sign-in page with multiple login options.
 
