@@ -17,9 +17,11 @@ Clone this repo and replace the okta configuration placeholders in the `Web.Conf
 You can see all the available configuration options in the [okta-aspnet GitHub](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-mvc.md#configuration-reference).
 For step-by-step instructions, visit the Okta [ASP.NET MVC quickstart]. The quickstart will guide you through adding Okta login to your ASP.NET application.
 
-**Note:** Although the quickstart shows how to use the Okta middleware in an ASP.NET MVC application, most of the steps are the same for your ASP.NET Web Forms application.
+> **Notes:** Although the quickstart shows how to use the Okta middleware in an ASP.NET MVC application, most of the steps are the same for your ASP.NET Web Forms application.
 
-Now start your server and navigate to http://localhost:8080 in your browser.
+> Because of recent changes in [Set-Cookie behavior (SameSite)](https://web.dev/samesite-cookies-explained) this code will only work properly if it's configured to use https. Check out [Work with SameSite cookies in ASP.NET](https://docs.microsoft.com/en-us/aspnet/samesite/system-web-samesite) for more details.
+
+Now start your server and navigate to https://localhost:44314 in your browser.
 
 If you see a home page that allows you to login, then things are working!  Clicking the **Log in** link will redirect you to the Okta hosted sign-in page.
 
