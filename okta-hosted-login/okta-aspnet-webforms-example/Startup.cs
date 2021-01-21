@@ -25,6 +25,7 @@ namespace okta_aspnet_webforms_example
                 OktaDomain = ConfigurationManager.AppSettings["okta:OktaDomain"],
                 ClientId = ConfigurationManager.AppSettings["okta:ClientId"],
                 ClientSecret = ConfigurationManager.AppSettings["okta:ClientSecret"],
+                AuthorizationServerId = ConfigurationManager.AppSettings["okta:AuthorizationServerId"],
                 RedirectUri = ConfigurationManager.AppSettings["okta:RedirectUri"],
                 PostLogoutRedirectUri = ConfigurationManager.AppSettings["okta:PostLogoutRedirectUri"],
                 GetClaimsFromUserInfoEndpoint = true,
