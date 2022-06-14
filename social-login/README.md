@@ -19,7 +19,6 @@ Before running this sample, you will need the following:
 
 Clone this repo and replace the okta configuration placeholders in the `Web.Config` with your configuration values from the Okta Developer Console. 
 You can see all the available configuration options in the [okta-aspnet GitHub](https://github.com/okta/okta-aspnet/blob/master/docs/aspnet4x-mvc.md#configuration-reference).
-For step-by-step instructions, visit the Okta [ASP.NET MVC Guide]. The guide will walk you through adding Okta sign-in to your ASP.NET application. You can also check out the [ASP.NET MVC quickstart].
 
 > **Note:** Although the quickstart shows how to use the Okta middleware with an ASP.NET MVC application, most of the steps are the same for your ASP.NET Web Forms application.
 
@@ -34,6 +33,4 @@ If you want to log in via Okta, you can login with the same account that you cre
 [OIDC Middleware Library]: https://github.com/okta/okta-aspnet
 [Authorization Code Flow]: https://developer.okta.com/authentication-guide/implementing-authentication/auth-code
 [OIDC Web Application Setup Instructions]: https://developer.okta.com/authentication-guide/implementing-authentication/auth-code#1-setting-up-your-application
-[ASP.NET MVC guide]:https://developer.okta.com/docs/guides/sign-into-web-app/aspnet/before-you-begin/
-[ASP.NET MVC quickstart]:https://developer.okta.com/quickstart/#/okta-sign-in-page/dotnet/aspnet4
 [Trusted Origin]:https://developer.okta.com/docs/api/getting_started/enabling_cors
