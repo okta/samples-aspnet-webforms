@@ -78,7 +78,7 @@ workflows:
   # See OKTA-624823
   semgrep:
     jobs:
-      - general-platform-helpers/job-semgrep-scan:
-          name: "Scan with Semgrep"
+      - platform-helpers/job-semgrep-scan:
           context:
             - static-analysis
+          name: "Scan with Semgrep"
