@@ -77,7 +77,9 @@ jobs:
 workflows:
   "Circle CI Tests":
     jobs:
-      - build
+      - build:
+          context:
+            - static-analysis
       - snyk-scan:
           name: execute-snyk
           context:
