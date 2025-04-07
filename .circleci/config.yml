@@ -79,35 +79,17 @@ jobs:
 
   snyk-scan:
     docker:
-        - image: cimg/python:3.10
+      - image: cimg/python:3.10
 
     steps:
-    - attach_workspace:
-        at: ~/project
-
-    - general-platform-helpers/step-run-snyk-monitor:
-        name: Run Snyk Monitor for okta-hosted-login
-        scan-all-projects: true
-        skip-unresolved: false
-        run-on-non-main: true
-        detection-depth: 4
-        working_directory: ~/project/okta-hosted-login
-
-    - general-platform-helpers/step-run-snyk-monitor:
-        name: Run Snyk Monitor for self-hosted-login
-        scan-all-projects: true
-        skip-unresolved: false
-        run-on-non-main: true
-        detection-depth: 4
-        working_directory: ~/project/self-hosted-login
-
-    - general-platform-helpers/step-run-snyk-monitor:
-        name: Run Snyk Monitor for social-login
-        scan-all-projects: true
-        skip-unresolved: false
-        run-on-non-main: true
-        detection-depth: 4
-        working_directory: ~/project/social-login
+      - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
+          at: ~/project
+      - general-platform-helpers/step-load-dependencies
+      - general-platform-helpers/step-run-snyk-monitor:
+          scan-all-projects: true
+          skip-unresolved: false
+          run-on-non-main: true
+          detection-depth: 4
 
 workflows:
   "Circle CI Tests":
