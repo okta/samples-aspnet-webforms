@@ -27,6 +27,12 @@ jobs:
           name: build self-hosted-login to scan
           command: ./self-hosted-login/build.sh
 
+      - persist_to_workspace: 
+          root: ~/project
+          paths:
+            - src
+            - .git
+
       - run: 
           name: build social-login to scan
           command: ./social-login/build.sh
