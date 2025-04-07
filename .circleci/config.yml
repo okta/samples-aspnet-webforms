@@ -66,6 +66,21 @@ jobs:
           artifact-commit: $ARTIFACT_COMMIT
           artifact-dir: $ARTIFACT_DIR
           artifact-name: my-artifact-name
+          
+  snyk-scan:
+    docker:
+      - image: cimg/python:3.10
+
+    steps:
+      - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
+          at: ~/project
+      - general-platform-helpers/step-load-dependencies
+      - general-platform-helpers/step-run-snyk-monitor:
+          scan-all-projects: true
+          skip-unresolved: false
+          run-on-non-main: true
+          detection-depth: 4
+
 
 workflows:
   "Circle CI Tests":
@@ -79,9 +94,3 @@ workflows:
             - static-analysis
           requires:
             - build
-  "Semgrep":
-    jobs:
-      - platform-helpers/job-semgrep-scan:
-          context:
-            - static-analysis
-          name: "Scan with Semgrep"
