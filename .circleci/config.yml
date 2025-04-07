@@ -79,32 +79,44 @@ jobs:
 
   snyk-scan:
     docker:
-      - image: cimg/python:3.10
+        - image: cimg/python:3.10
+
     steps:
-      - attach_workspace:
-          at: ~/project
-      - run:
-          name: List Workspace Contents (Root)
-          command: ls -al ~/project
-      - run:
-          name: List Workspace Contents (okta-hosted-login)
-          command: ls -al ~/project/okta-hosted-login
-      - run:
-          name: List Workspace Contents (self-hosted-login)
-          command: ls -al ~/project/self-hosted-login
-      - run:
-          name: List Workspace Contents (social-login)
-          command: ls -al ~/project/social-login
-      - general-platform-helpers/step-load-dependencies
-      - run:
-          name: Run Snyk Scans (Individual Projects)
-          command: |
-            cd ~/project/okta-hosted-login
-            snyk monitor --severity-threshold=low
-            cd ~/project/self-hosted-login
-            snyk monitor --severity-threshold=low
-            cd ~/project/social-login
-            snyk monitor --severity-threshold=low
+    - attach_workspace:
+        at: ~/project
+
+    - general-platform-helpers/step-load-dependencies
+
+    - run:
+        name: Run Snyk Monitor for okta-hosted-login
+        working_directory: ~/project/okta-hosted-login
+        command: |
+          circleci step run general-platform-helpers/step-run-snyk-monitor \
+            --scan-all-projects true \
+            --skip-unresolved false \
+            --run-on-non-main true \
+            --detection-depth 4
+
+    - run:
+        name: Run Snyk Monitor for self-hosted-login
+        working_directory: ~/project/self-hosted-login
+        command: |
+          circleci step run general-platform-helpers/step-run-snyk-monitor \
+            --scan-all-projects true \
+            --skip-unresolved false \
+            --run-on-non-main true \
+            --detection-depth 4
+
+    - run:
+        name: Run Snyk Monitor for social-login
+        working_directory: ~/project/social-login
+        command: |
+          circleci step run general-platform-helpers/step-run-snyk-monitor \
+            --scan-all-projects true \
+            --skip-unresolved false \
+            --run-on-non-main true \
+            --detection-depth 4
+
 
 workflows:
   "Circle CI Tests":
