@@ -17,6 +17,12 @@ jobs:
       name: windows/default
     steps:
       - checkout
+
+      - run:
+          name: "Install required components"
+          command: |
+              choco install -y dotnetcore-sdk
+              
       - run: dotnet --version
 
       - run:
