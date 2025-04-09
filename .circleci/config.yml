@@ -13,18 +13,16 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   build:
+    description: Run tests and build
     executor:
       name: windows/default
     steps:
       - checkout
-
       - run:
           name: "Install required components"
           command: |
               choco install -y dotnetcore-sdk
-              
       - run: dotnet --version
-
       - run:
           name: build okta-hosted-login to scan
           command: ./okta-hosted-login/build.sh
@@ -96,13 +94,13 @@ jobs:
           skip-unresolved: false
           run-on-non-main: true
           detection-depth: 4
-
+          
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   "Circle CI Tests":
     jobs:
-      - build:
-          context:
-            - static-analysis
+      - build
       - snyk-scan:
           name: execute-snyk
           context:
