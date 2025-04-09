@@ -52,15 +52,6 @@ jobs:
             python --version
             python -m pip install --upgrade pip
 
-      - run:
-          name: Download Reverse Labs Scanner
-          command: |
-            curl.exe https://dso-resources.oktasecurity.com/scanner  -H "x-api-key: $env:DSO_RLSECURE_TOKEN" -o rl_wrapper-0.0.2+35ababa-py3-none-any.whl
-      - run:
-          name: Install RL Wrapper
-          command: |
-            pip install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
-
   reversinglabs-scan:
     docker:
       - image: cimg/python:3.10
