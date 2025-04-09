@@ -84,6 +84,28 @@ jobs:
     steps:
       - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
           at: ~/project
+      
+      # Step 1: Install .NET SDK (Choose version compatible with restoring net48)
+      - run:
+          name: Install .NET SDK
+          command: |
+            sudo apt-get update
+            # Use an SDK version capable of targeting .NET Framework 4.8 (e.g., 6.0, 7.0)
+            sudo apt-get install -y dotnet-sdk-7.0
+            dotnet --version
+            # Consider installing mono-complete + nuget if 'dotnet restore' struggles with complex netfx scenarios
+            # sudo apt-get install -y mono-complete nuget
+
+      # Step 2: Restore NuGet Packages for ALL projects
+      - run:
+          name: Restore NuGet Dependencies
+          working_directory: ~/project
+          command: |
+            # Alternative if using nuget CLI:
+            nuget restore okta-hosted-login/tools/packages.config -OutputDirectory okta-hosted-login/packages
+            nuget restore self-hosted-login/tools/packages.config -OutputDirectory self-hosted-login/packages
+            nuget restore social-login/tools/packages.config -OutputDirectory social-login/packages
+
       - general-platform-helpers/step-load-dependencies
       - general-platform-helpers/step-run-snyk-monitor:
           scan-all-projects: true
