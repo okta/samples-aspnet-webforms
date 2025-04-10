@@ -17,6 +17,12 @@ jobs:
       name: windows/default
     steps:
       - checkout
+
+      - run:
+          name: "Install required components"
+          command: |
+              choco install -y dotnetcore-sdk
+              
       - run: dotnet --version
 
       - run:
@@ -79,39 +85,83 @@ jobs:
 
   snyk-scan:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.10 # Base image with Python for the orb
 
     steps:
-      - attach_workspace: # Allows for sharing of build-workspace (containing downloaded dependencies) (optional)
-          at: ~/project
-      
-      # Step 1: Install .NET SDK (Choose version compatible with restoring net48)
+      - attach_workspace:
+          at: ~/project # Attach workspace containing checked-out code
+
+      # Step 1: Install .NET SDK (Required for restoring other projects)
       - run:
           name: Install .NET SDK
           command: |
             sudo apt-get update
-            # Use an SDK version capable of targeting .NET Framework 4.8 (e.g., 6.0, 7.0)
+            # Install SDK version compatible with restoring net48 projects (e.g., 6.0, 7.0)
             sudo apt-get install -y dotnet-sdk-7.0
             dotnet --version
-            # Consider installing mono-complete + nuget if 'dotnet restore' struggles with complex netfx scenarios
-            # sudo apt-get install -y mono-complete nuget
 
-      # Step 2: Restore NuGet Packages for ALL projects
+      # Step 2: Restore Dependencies for main projects (Best effort before modification)
+      # Snyk primarily needs the packages.config modified, but restoring others helps avoid ENOENT errors for those.
       - run:
-          name: Restore NuGet Dependencies
+          name: Restore NuGet Dependencies (Main Projects)
           working_directory: ~/project
           command: |
-            # Alternative if using nuget CLI:
-            nuget restore okta-hosted-login/tools/packages.config -OutputDirectory okta-hosted-login/packages
-            nuget restore self-hosted-login/tools/packages.config -OutputDirectory self-hosted-login/packages
-            nuget restore social-login/tools/packages.config -OutputDirectory social-login/packages
+            dotnet restore okta-hosted-login/okta-aspnet-webforms-example/okta-aspnet-webforms-example.csproj || echo "Restore failed for okta-hosted, continuing..."
+            dotnet restore self-hosted-login/okta-aspnet-webforms-example/okta-aspnet-webforms-example.csproj || echo "Restore failed for self-hosted, continuing..."
+            dotnet restore social-login/okta-aspnet-webforms-example/okta-aspnet-webforms-example.csproj || echo "Restore failed for social-login, continuing..."
+            # We won't try restoring tools/ packages.config here, relying on the modification below for Snyk.
 
+      # Step 3: Install xmlstarlet (Required for the modification script)
+      - run:
+          name: Install xmlstarlet
+          command: sudo apt-get update && sudo apt-get install -y xmlstarlet
+
+      # Step 4: Prep packages.config using xmlstarlet (Your provided logic)
+      - run:
+          name: Prep packages.config for Snyk (.NET Framework)
+          working_directory: ~/project # Ensure find starts from the project root
+          environment:
+            # --- Adjust these values for your project ---
+            DOTNET_TARGET_FRAMEWORK_VERSION: net48 # Correct framework for v4.8
+            PACKAGE_ID: "Cake"                   # List package IDs needing the attribute (space-separated)
+                                                 # Check your tools/packages.config files for exact IDs
+          # Use the script logic you provided, slightly adapted for better find usage
+          command: |
+            #!/bin/bash
+            echo "Adding targetFramework=${DOTNET_TARGET_FRAMEWORK_VERSION} to packages: ${PACKAGE_ID}"
+            # Ensure PACKAGE_ID is treated as separate words
+            read -r -a package_ids <<< "$PACKAGE_ID"
+
+            # Use find -print0 and while read loop for safety with filenames
+            find . -name "packages.config" -type f -print0 | while IFS= read -r -d $'\0' file; do
+              echo "Processing file: $file"
+              for n in "${package_ids[@]}"; do
+                # Add attribute if missing for this package ID
+                xmlstarlet ed --inplace --quiet \
+                  -i "//package[@id='$n'][not(@targetFramework)]" \
+                  -t attr -n "targetFramework" -v "${DOTNET_TARGET_FRAMEWORK_VERSION}" \
+                  "$file"
+                # Update attribute if it's 'native' for this package ID
+                xmlstarlet ed --inplace --quiet \
+                  -u "//package[@id='$n'][@targetFramework='native']/@targetFramework" \
+                  -v "${DOTNET_TARGET_FRAMEWORK_VERSION}" \
+                  "$file"
+              done
+            done
+            echo "Finished prepping packages.config files."
+            # Optional: Verify changes in a specific file if needed
+            echo "Checking content of a tools packages.config (example):"
+            cat ./okta-hosted-login/tools/packages.config || echo "File not found or cat failed"
+
+
+      # Step 5: Run Snyk Orb Steps (Should now work with modified packages.config)
       - general-platform-helpers/step-load-dependencies
       - general-platform-helpers/step-run-snyk-monitor:
-          scan-all-projects: true
-          skip-unresolved: false
+          scan-all-projects: true   # Scan all, including the now-modified tool packages
+          skip-unresolved: false  # Keep false
           run-on-non-main: true
           detection-depth: 4
+          # No exclude needed
 
 workflows:
   "Circle CI Tests":
