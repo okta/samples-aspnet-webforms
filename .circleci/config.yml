@@ -64,7 +64,7 @@ jobs:
       - image: cimg/python:3.10
     parameters:
       dotnet-target-framework-version:
-        default: net50
+        default: net48
         description: The .NET targeting version to set in packages.config
         type: string
       package-id:
