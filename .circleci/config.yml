@@ -63,6 +63,38 @@ jobs:
           command: |
             pip install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
 
+    prep-packages-config-for-snyk:
+        docker:
+          - image: cimg/python:3.10
+        parameters:
+          dotnet-target-framework-version:
+            default: net50
+            description: The .NET targeting version to set in packages.config
+            type: string
+          package-id:
+            default: Cake MSBuildTasks nlohmann.json
+            description: Package IDs to patch in packages.config
+            type: string
+        steps:
+          - attach_workspace:
+              at: ~/project
+          - run:
+              name: Install xmlstarlet
+              command: sudo apt-get -y install xmlstarlet
+          - run:
+              name: Patch packages.config for Snyk compatibility
+              command: |
+                for n in ${PACKAGE_ID}; do
+                  find ~/project -name "packages.config" -type f  \
+                    -exec xmlstarlet ed --inplace -i "//package[@id=\"$n\"][not(@targetFramework)]" \
+                    -t attr -n "targetFramework" -v ${DOTNET_TARGET_FRAMEWORK_VERSION} {} \; \
+                    -exec xmlstarlet ed --inplace -u "//package[@id=\"$n\" and @targetFramework='native']/@targetFramework" \
+                    -v ${DOTNET_TARGET_FRAMEWORK_VERSION} {} \;
+                done
+              environment:
+                DOTNET_TARGET_FRAMEWORK_VERSION: << parameters.dotnet-target-framework-version >>
+                PACKAGE_ID: << parameters.package-id >>
+
   reversinglabs-scan:
     docker:
       - image: cimg/python:3.10
@@ -103,6 +135,12 @@ workflows:
       - build:
           context:
             - static-analysis
+      - prep-packages-config-for-snyk:
+          name: patch-configs
+          context:
+            - static-analysis
+          requires:
+            - build
       - snyk-scan:
           name: execute-snyk
           context:
