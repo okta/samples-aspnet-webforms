@@ -74,6 +74,14 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - src
+            - .git
+            - okta-hosted-login
+            - self-hosted-login
+            - social-login
       - run:
             name: Install xmlstarlet
             command: |
