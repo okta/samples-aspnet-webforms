@@ -33,15 +33,6 @@ jobs:
           name: build social-login to scan
           command: ./social-login/build.sh
 
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - src
-            - .git
-            - okta-hosted-login
-            - self-hosted-login
-            - social-login
-
       - run:
           name: Install Python
           command: |
@@ -59,7 +50,15 @@ jobs:
           command: |
             pip install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
 
-<<<<<<< Updated upstream
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - src
+            - .git
+            - okta-hosted-login
+            - self-hosted-login
+            - social-login
+
   prep-packages-config-for-snyk:
     docker:
       - image: cimg/python:3.10
@@ -75,14 +74,11 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-=======
->>>>>>> Stashed changes
       - persist_to_workspace:
           root: ~/project
           paths:
             - src
             - .git
-<<<<<<< Updated upstream
             - okta-hosted-login
             - self-hosted-login
             - social-login
@@ -104,12 +100,6 @@ jobs:
           environment:
             DOTNET_TARGET_FRAMEWORK_VERSION: << parameters.dotnet-target-framework-version >>
             PACKAGE_ID: << parameters.package-id >>
-=======
-            # Persist the entire subdirectories, ensuring all relevant files are available
-            - okta-hosted-login
-            - self-hosted-login
-            - social-login
->>>>>>> Stashed changes
 
   reversinglabs-scan:
     docker:
