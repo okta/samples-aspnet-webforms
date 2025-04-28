@@ -29,11 +29,17 @@ jobs:
             Get-ChildItem -Path . -Directory
       - run:
           name: build self-hosted-login to scan
-          command: ./self-hosted-login/build.sh
+          command: |
+            cd self-hosted-login
+            bash ./build.sh
+            Get-ChildItem -Path . -Directory
 
       - run:
           name: build social-login to scan
-          command: ./social-login/build.sh
+          command: |
+            cd social-login
+            bash ./build.sh
+            Get-ChildItem -Path . -Directory
 
       - run:
           name: Install Python
