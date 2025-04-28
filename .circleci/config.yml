@@ -25,7 +25,7 @@ jobs:
           name: build okta-hosted-login to scan
           command: |
             ./okta-hosted-login/build.sh
-            dir
+            dir okta-hosted-login /AD
 
       - run:
           name: build self-hosted-login to scan
