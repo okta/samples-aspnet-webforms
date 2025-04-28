@@ -77,9 +77,17 @@ if [ ! -f $PACKAGES_CONFIG_MD5 ] || [ "$( cat $PACKAGES_CONFIG_MD5 | sed 's/\r$/
     find . -type d ! -name . | xargs rm -rf
 fi
 
-mono "$NUGET_EXE" install
+mono "$NUGET_EXE" install -ExcludeVersion
 if [ $? -ne 0 ]; then
     echo "Could not restore NuGet packages."
+    exit 1
+fi
+
+# Install packages for okta-aspnet-webforms-example
+# https://docs.snyk.io/supported-languages-package-managers-and-frameworks/.net/.net-for-open-source#support-for-packages.config
+mono "$NUGET_EXE" install -OutputDirectory packages ./okta-aspnet-webforms-example/packages.config
+if [ $? -ne 0 ]; then
+    echo "Could not install NuGet packages for okta-aspnet-webforms-example."
     exit 1
 fi
 
