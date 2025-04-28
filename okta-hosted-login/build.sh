@@ -76,10 +76,10 @@ fi
 # Restore tools from NuGet.
 pushd "$TOOLS_DIR" >/dev/null
 if [ ! -f $PACKAGES_CONFIG_MD5 ] || [ "$( cat $PACKAGES_CONFIG_MD5 | sed 's/\r$//' )" != "$( $MD5_EXE $PACKAGES_CONFIG | awk '{ print $1 }' )" ]; then
-    find . -type d ! -name . | xargs rm -rf
+    /usr/bin/find . -mindepth 1 -type d -delete
 fi
 
-mono "$NUGET_EXE" install -ExcludeVersion
+"$NUGET_EXE" install -ExcludeVersion
 if [ $? -ne 0 ]; then
     echo "Could not restore NuGet packages."
     exit 1
@@ -91,7 +91,7 @@ popd >/dev/null
 
 # Install packages for okta-aspnet-webforms-example
 # https://docs.snyk.io/supported-languages-package-managers-and-frameworks/.net/.net-for-open-source#support-for-packages.config
-mono "$NUGET_EXE" install -OutputDirectory packages ./okta-aspnet-webforms-example/packages.config
+"$NUGET_EXE" install -OutputDirectory packages ./okta-aspnet-webforms-example/packages.config
 if [ $? -ne 0 ]; then
     echo "Could not install NuGet packages for okta-aspnet-webforms-example."
     exit 1
