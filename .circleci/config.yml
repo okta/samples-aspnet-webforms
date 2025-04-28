@@ -24,8 +24,9 @@ jobs:
       - run:
           name: build okta-hosted-login to scan
           command: |
-            ./okta-hosted-login/build.sh
-            Get-ChildItem -Path okta-hosted-login -Directory
+            cd okta-hosted-login
+            ./build.sh
+            Get-ChildItem -Path . -Directory
       - run:
           name: build self-hosted-login to scan
           command: ./self-hosted-login/build.sh
