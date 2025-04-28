@@ -17,7 +17,7 @@ jobs:
       - run:
           name: "Install required components"
           command: |
-              choco install -y dotnetcore-sdk
+              choco install -y dotnetcore-sdk mono
               
       - run: dotnet --version
 
