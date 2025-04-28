@@ -24,9 +24,11 @@ jobs:
       - run:
           name: build okta-hosted-login to scan
           command: |
+            Set-PSDebug -Trace 1 # Enable command printing
             cd okta-hosted-login
             ./build.sh
             Get-ChildItem -Path . -Directory
+            Set-PSDebug -Trace 0 # Optional: Disable command printing
       - run:
           name: build self-hosted-login to scan
           command: ./self-hosted-login/build.sh
