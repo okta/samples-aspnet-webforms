@@ -97,8 +97,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-ls -d
-
 # Make sure that Cake has been installed.
 if [ ! -f "$CAKE_EXE" ]; then
     echo "Could not find Cake.exe at '$CAKE_EXE'."
