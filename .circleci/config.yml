@@ -1,84 +1,162 @@
 version: 2.1
 
 orbs:
+  windows: circleci/windows@5.0
   general-platform-helpers: okta/general-platform-helpers@1.9
+  platform-helpers: okta/platform-helpers@1
   python: circleci/python@2.0.3
   aws-cli: circleci/aws-cli@5.1
 
 jobs:
-  reversing-labs:
+  build:
+    executor:
+      name: windows/default
     steps:
       - checkout
-  
+
+      - run:
+          name: "Install required components"
+          command: |
+              choco install -y dotnetcore-sdk
+              
       - run: dotnet --version
 
-      - run: 
+      - run:
           name: build okta-hosted-login to scan
-          command: ./okta-hosted-login/build.sh
-
-      - run: 
+          command: |
+            cd okta-hosted-login
+            bash ./build.sh
+            Get-ChildItem -Path . -Directory
+      - run:
           name: build self-hosted-login to scan
-          command: ./self-hosted-login/build.sh
+          command: |
+            cd self-hosted-login
+            bash ./build.sh
+            Get-ChildItem -Path . -Directory
 
-      - run: 
+      - run:
           name: build social-login to scan
-          command: ./social-login/build.sh
-       
-      // Necessary to Install rl wrapper   
+          command: |
+            cd social-login
+            bash ./build.sh
+            Get-ChildItem -Path . -Directory
+
       - run:
           name: Install Python
           command: |
-            sudo apt-get update
-            sudo apt-get install -y python3 python3-pip
-            sudo pip install --upgrade pip
-  
-      // Download the scanner from Okta Security
+            choco install python --version=3.9.0 -y
+            python --version
+            python -m pip install --upgrade pip
+
       - run:
           name: Download Reverse Labs Scanner
           command: |
-            curl https://dso-resources.oktasecurity.com/scanner \
-              -H "x-api-key: $DSO_RLSECURE_TOKEN" \
-              --output rl_wrapper-0.0.2+35ababa-py3-none-any.whl
-      // Install the wrapper that was downloaded
+            curl.exe https://dso-resources.oktasecurity.com/scanner  -H "x-api-key: $env:DSO_RLSECURE_TOKEN" -o rl_wrapper-0.0.2+35ababa-py3-none-any.whl
+
       - run:
           name: Install RL Wrapper
           command: |
             pip install ./rl_wrapper-0.0.2+35ababa-py3-none-any.whl
-  
-      // Setup the AWS profile
-      - aws-cli/setup:
-          profile_name: default
-          role_arn: $AWS_ARN
-          region: us-east-1
-  
-      // Get the credentials and save to env
-      - run: >-
-          eval "$(aws configure export-credentials --profile default --format env)" 2> /dev/null
-  
-      // Run the wrapper, do not change anything here
-      - run:
-          name: Run Reversing Labs Wrapper Scanner
-          command: |
-            rl-wrapper \
-              --artifact ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME} \
-              --name $CIRCLE_PROJECT_REPONAME\
-              --version $CIRCLE_SHA1\
-              --repository $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME \
-              --commit $CIRCLE_SHA1 \
-              --build-env "circleci" \
-              --suppress_output
 
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - src
+            - .git
+            - okta-hosted-login
+            - self-hosted-login
+            - social-login
+
+  prep-packages-config-for-snyk:
+    docker:
+      - image: cimg/python:3.10
+    parameters:
+      dotnet-target-framework-version:
+        default: net48
+        description: The .NET targeting version to set in packages.config
+        type: string
+      package-id:
+        default: Cake MSBuildTasks nlohmann.json
+        description: Package IDs to patch in packages.config
+        type: string
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+            name: Install xmlstarlet
+            command: |
+              sudo apt-get update
+              sudo apt-get install -y xmlstarlet
+      - run:
+          name: Patch packages.config for Snyk compatibility
+          command: |
+            for n in ${PACKAGE_ID}; do
+              find ~/project -name "packages.config" -type f  \
+                -exec xmlstarlet ed --inplace -i "//package[@id=\"$n\"][not(@targetFramework)]" \
+                -t attr -n "targetFramework" -v ${DOTNET_TARGET_FRAMEWORK_VERSION} {} \; \
+                -exec xmlstarlet ed --inplace -u "//package[@id=\"$n\" and @targetFramework='native']/@targetFramework" \
+                -v ${DOTNET_TARGET_FRAMEWORK_VERSION} {} \;
+            done
+          environment:
+            DOTNET_TARGET_FRAMEWORK_VERSION: << parameters.dotnet-target-framework-version >>
+            PACKAGE_ID: << parameters.package-id >>
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - src
+            - .git
+            - okta-hosted-login
+            - self-hosted-login
+            - social-login
+
+  reversinglabs-scan:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - run:
+          command: >
+            echo "export ARTIFACT_DIR=$(echo
+            "${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/path/to/my/directory")" >>
+            "$BASH_ENV"
+
+            echo "export ARTIFACT_COMMIT=$(echo "${CIRCLE_SHA1:0:8}")" >>
+            "$BASH_ENV"
+
+            source "$BASH_ENV"
+          name: Set environment variables
+      - platform-helpers/step-reversinglabs-scan:
+          artifact-commit: $ARTIFACT_COMMIT
+          artifact-dir: $ARTIFACT_DIR
+          artifact-name: my-artifact-name
+
+  snyk-scan:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - general-platform-helpers/step-load-dependencies
+      - general-platform-helpers/step-run-snyk-monitor:
+          scan-all-projects: true
+          skip-unresolved: false
+          run-on-non-main: true
+          detection-depth: 4
 
 workflows:
-  "Malware Scanner":
+  "Circle CI Tests":
     jobs:
-      - reversing-labs:
+      - build:
           context:
             - static-analysis
-  # See OKTA-624823
-  semgrep:
-    jobs:
-      - general-platform-helpers/job-semgrep-scan:
-          name: "Scan with Semgrep"
+      - prep-packages-config-for-snyk:
+          name: patch-configs
           context:
             - static-analysis
+          requires:
+            - build
+      - snyk-scan:
+          name: execute-snyk
+          context:
+            - static-analysis
+          requires:
+            - patch-configs

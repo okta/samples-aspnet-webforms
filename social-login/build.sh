@@ -6,6 +6,8 @@
 # Feel free to change this file to fit your needs.
 ##########################################################################
 
+set -x # Enable command printing
+
 # Define directories.
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TOOLS_DIR=$SCRIPT_DIR/tools
@@ -74,10 +76,10 @@ fi
 # Restore tools from NuGet.
 pushd "$TOOLS_DIR" >/dev/null
 if [ ! -f $PACKAGES_CONFIG_MD5 ] || [ "$( cat $PACKAGES_CONFIG_MD5 | sed 's/\r$//' )" != "$( $MD5_EXE $PACKAGES_CONFIG | awk '{ print $1 }' )" ]; then
-    find . -type d ! -name . | xargs rm -rf
+    /usr/bin/find . -mindepth 1 -type d -delete
 fi
 
-mono "$NUGET_EXE" install -ExcludeVersion
+"$NUGET_EXE" install -ExcludeVersion
 if [ $? -ne 0 ]; then
     echo "Could not restore NuGet packages."
     exit 1
@@ -86,6 +88,14 @@ fi
 $MD5_EXE $PACKAGES_CONFIG | awk '{ print $1 }' >| $PACKAGES_CONFIG_MD5
 
 popd >/dev/null
+
+# Install packages for okta-aspnet-webforms-example
+# https://docs.snyk.io/supported-languages-package-managers-and-frameworks/.net/.net-for-open-source#support-for-packages.config
+"$NUGET_EXE" install -OutputDirectory packages ./okta-aspnet-webforms-example/packages.config
+if [ $? -ne 0 ]; then
+    echo "Could not install NuGet packages for okta-aspnet-webforms-example."
+    exit 1
+fi
 
 # Make sure that Cake has been installed.
 if [ ! -f "$CAKE_EXE" ]; then
@@ -99,3 +109,5 @@ if $SHOW_VERSION; then
 else
     exec mono "$CAKE_EXE" $SCRIPT -verbosity=$VERBOSITY -configuration=$CONFIGURATION -target=$TARGET $DRYRUN "${SCRIPT_ARGUMENTS[@]}"
 fi
+
+set +x # Disable command printing
